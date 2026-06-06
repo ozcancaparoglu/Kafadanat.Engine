@@ -1,9 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Onspay.Cqrs.Behaviors" Version="1.0.13" />
+        <PackageReference Include="Onspay.Infrastructure.Outbox" Version="1.0.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\..\..\Kafadanat.Contracts\Kafadanat.Contracts.csproj" />
+    </ItemGroup>
 
 </Project>
