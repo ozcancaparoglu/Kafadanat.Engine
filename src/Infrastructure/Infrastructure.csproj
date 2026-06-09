@@ -13,11 +13,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
-        <PackageReference Include="Onspay.Infrastructure.DomainEvents" Version="1.0.13" />
-        <PackageReference Include="Onspay.Infrastructure.Inbox" Version="1.0.13" />
-        <PackageReference Include="Onspay.Infrastructure.Outbox" Version="1.0.13" />
-        <PackageReference Include="Onspay.Infrastructure.Messaging.RabbitMq" Version="1.0.13" />
-        <PackageReference Include="Onspay.Infrastructure.Correlation" Version="1.0.13" />
+        <PackageReference Include="Onspay.Infrastructure.DomainEvents" Version="1.0.14" />
+        <PackageReference Include="Onspay.Infrastructure.Inbox" Version="1.0.14" />
+        <PackageReference Include="Onspay.Infrastructure.Outbox" Version="1.0.14" />
+        <PackageReference Include="Onspay.Infrastructure.Messaging.RabbitMq" Version="1.0.14" />
+        <PackageReference Include="Onspay.Infrastructure.Correlation" Version="1.0.14" />
     </ItemGroup>
 
     <ItemGroup>
