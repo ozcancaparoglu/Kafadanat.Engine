@@ -1,6 +1,6 @@
 using System.Data;
 using Npgsql;
-using Onspay.Cqrs.Data;
+using Onspay.SharedKernel;
 
 namespace Infrastructure.Database;
 

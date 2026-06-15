@@ -1,6 +1,6 @@
 using Domain;
 using Microsoft.Extensions.DependencyInjection;
-using Onspay.Cqrs.Behaviors;
+using Onspay.Cqrs;
 
 namespace Application;
 

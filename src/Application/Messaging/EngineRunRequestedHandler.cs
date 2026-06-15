@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain;
 using Kafadanat.Contracts;
-using Onspay.Cqrs.Inbox;
+using Onspay.Infrastructure.Inbox;
 using Onspay.Infrastructure.Outbox;
 using Onspay.SharedKernel;
 

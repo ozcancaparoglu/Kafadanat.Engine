@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Onspay.Cqrs.Messaging;
 using Onspay.Infrastructure.DomainEvents;
 using Onspay.Infrastructure.Inbox;
 using Onspay.Infrastructure.Outbox;
+using Onspay.SharedKernel;
 
 namespace Infrastructure.Database;
 

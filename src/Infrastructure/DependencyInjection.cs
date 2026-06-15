@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Onspay.Cqrs.Data;
 using Onspay.Infrastructure.Correlation;
 using Onspay.Infrastructure.DomainEvents;
 using Onspay.Infrastructure.Inbox;
 using Onspay.Infrastructure.Messaging.RabbitMq;
 using Onspay.Infrastructure.Outbox;
+using Onspay.SharedKernel;
 
 namespace Infrastructure;
 

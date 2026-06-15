@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Onspay.SharedKernel" Version="1.0.14" />
+        <PackageReference Include="Onspay.SharedKernel" Version="1.0.16" />
     </ItemGroup>
 
 </Project>
