@@ -8,8 +8,9 @@ namespace Infrastructure.Database;
 
 public sealed class EngineDbContext(
     DbContextOptions<EngineDbContext> options,
-    IDomainEventDispatcher dispatcher)
-    : DomainEventDbContextBase(options, dispatcher), IInboxDbContext, IOutboxDbContext
+    IDomainEventDispatcher dispatcher,
+    IDateTimeProvider dateTimeProvider)
+    : DomainEventDbContextBase(options, dispatcher, dateTimeProvider), IInboxDbContext, IOutboxDbContext
 {
     public DbSet<InboxMessage> InboxMessages => Set<InboxMessage>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
