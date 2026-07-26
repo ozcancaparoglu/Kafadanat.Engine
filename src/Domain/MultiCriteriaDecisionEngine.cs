@@ -13,9 +13,10 @@ public sealed class MultiCriteriaDecisionEngine : IMultiCriteriaDecisionEngine
             return Result.Failure<EngineAnalysis>(error);
 
         var sorted = criteria.OrderBy(c => c.Rank).ToList();
+        var resolved = ResolveEffectiveValues(sorted, alternatives);
         var weights = ComputeRocWeights(sorted);
-        var saw = ComputeSaw(sorted, alternatives, weights);
-        var topsis = ComputeTopsis(sorted, alternatives, weights);
+        var saw = ComputeSaw(sorted, alternatives, resolved, weights);
+        var topsis = ComputeTopsis(sorted, alternatives, resolved, weights);
         var comparison = ComputeComparison(alternatives, saw, topsis);
 
         var criterionWeights = sorted
@@ -38,13 +39,53 @@ public sealed class MultiCriteriaDecisionEngine : IMultiCriteriaDecisionEngine
             {
                 if (!alt.Values.TryGetValue(c.Key, out var val))
                     return EngineErrors.MissingCriterionValue(alt.Id, c.Key);
-                if (!double.IsFinite(val))
+                if (val is not null && !double.IsFinite(val.Value))
                     return EngineErrors.InvalidValue;
             }
         }
 
         return null;
     }
+
+    // Missing/DNF values are resolved relative to the other alternatives in this same run,
+    // based on the criterion's direction: a Cost value of 0 (impossible for e.g. a real finish
+    // position — it always signals "did not finish") or an absent value is treated as no better
+    // than the worst real performer (the column's max); a Benefit value that's absent (0 is a
+    // legitimate real worst value there, so it's left alone) is treated the same way via the
+    // column's min. If a column has no real values at all, everyone gets the same placeholder so
+    // the existing max-min-epsilon tie-break in ComputeSaw scores it as a neutral 0.5 for all.
+    private static Dictionary<string, Dictionary<string, double>> ResolveEffectiveValues(
+        IReadOnlyList<Criterion> sorted,
+        IReadOnlyList<Alternative> alternatives)
+    {
+        var resolved = alternatives.ToDictionary(a => a.Id, _ => new Dictionary<string, double>(sorted.Count));
+
+        foreach (var c in sorted)
+        {
+            var real = new List<double>(alternatives.Count);
+            foreach (var alt in alternatives)
+            {
+                var v = alt.Values[c.Key];
+                if (!IsMissing(v, c.OptimizationType))
+                    real.Add(v!.Value);
+            }
+
+            double placeholder = real.Count > 0
+                ? (c.OptimizationType == OptimizationType.Minimize ? real.Max() : real.Min())
+                : 0.0;
+
+            foreach (var alt in alternatives)
+            {
+                var v = alt.Values[c.Key];
+                resolved[alt.Id][c.Key] = IsMissing(v, c.OptimizationType) ? placeholder : v!.Value;
+            }
+        }
+
+        return resolved;
+    }
+
+    private static bool IsMissing(double? value, OptimizationType type) =>
+        value is null || (type == OptimizationType.Minimize && value == 0);
 
     // ROC weight formula: w_i = (1/n) * Σ(1/j) for j = i..n (rank 1 is heaviest)
     private static Dictionary<string, double> ComputeRocWeights(IReadOnlyList<Criterion> sorted)
@@ -64,12 +105,13 @@ public sealed class MultiCriteriaDecisionEngine : IMultiCriteriaDecisionEngine
     private static SawEngineResult ComputeSaw(
         IReadOnlyList<Criterion> sorted,
         IReadOnlyList<Alternative> alternatives,
+        Dictionary<string, Dictionary<string, double>> resolved,
         Dictionary<string, double> weights)
     {
         var minMax = new Dictionary<string, (double min, double max)>(sorted.Count);
         foreach (var c in sorted)
         {
-            var vals = alternatives.Select(a => a.Values[c.Key]);
+            var vals = alternatives.Select(a => resolved[a.Id][c.Key]);
             minMax[c.Key] = (vals.Min(), vals.Max());
         }
 
@@ -81,7 +123,7 @@ public sealed class MultiCriteriaDecisionEngine : IMultiCriteriaDecisionEngine
             foreach (var c in sorted)
             {
                 var (min, max) = minMax[c.Key];
-                double raw = alt.Values[c.Key];
+                double raw = resolved[alt.Id][c.Key];
                 double norm = max - min < double.Epsilon
                     ? 0.5
                     : c.OptimizationType == OptimizationType.Maximize
@@ -118,13 +160,14 @@ public sealed class MultiCriteriaDecisionEngine : IMultiCriteriaDecisionEngine
     private static TopsisEngineResult ComputeTopsis(
         IReadOnlyList<Criterion> sorted,
         IReadOnlyList<Alternative> alternatives,
+        Dictionary<string, Dictionary<string, double>> resolved,
         Dictionary<string, double> weights)
     {
         // Step 1: vector normalization
         var norms = new Dictionary<string, double>(sorted.Count);
         foreach (var c in sorted)
         {
-            double sumSq = alternatives.Sum(a => a.Values[c.Key] * a.Values[c.Key]);
+            double sumSq = alternatives.Sum(a => resolved[a.Id][c.Key] * resolved[a.Id][c.Key]);
             norms[c.Key] = Math.Sqrt(sumSq);
         }
 
@@ -135,7 +178,7 @@ public sealed class MultiCriteriaDecisionEngine : IMultiCriteriaDecisionEngine
             var row = new Dictionary<string, double>(sorted.Count);
             foreach (var c in sorted)
             {
-                double r = norms[c.Key] > 0 ? alt.Values[c.Key] / norms[c.Key] : 0.0;
+                double r = norms[c.Key] > 0 ? resolved[alt.Id][c.Key] / norms[c.Key] : 0.0;
                 row[c.Key] = r * weights[c.Key];
             }
             wm[alt.Id] = row;

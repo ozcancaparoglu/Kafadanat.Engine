@@ -20,9 +20,9 @@ internal static class RunMapper
         var alternatives = msg.Alternatives
             .Select((id, i) =>
             {
-                var values = new Dictionary<string, double>(criteriaList.Count);
+                var values = new Dictionary<string, double?>(criteriaList.Count);
                 for (int j = 0; j < criteriaList.Count; j++)
-                    values[criteriaList[j].Key] = (double)msg.Matrix[i][j];
+                    values[criteriaList[j].Key] = (double?)msg.Matrix[i][j];
                 return new Alternative(id, values);
             })
             .ToList();
