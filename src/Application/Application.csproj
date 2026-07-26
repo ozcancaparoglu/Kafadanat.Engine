@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Onspay.Cqrs" Version="1.0.22" />
-        <PackageReference Include="Onspay.Infrastructure.Outbox" Version="1.0.22" />
-        <PackageReference Include="Onspay.Infrastructure.Inbox" Version="1.0.22" />
+        <PackageReference Include="Onspay.Cqrs" Version="1.0.23" />
+        <PackageReference Include="Onspay.Infrastructure.Outbox" Version="1.0.23" />
+        <PackageReference Include="Onspay.Infrastructure.Inbox" Version="1.0.23" />
         <PackageReference Include="Kafadanat.Contracts" Version="2.1.0" />
     </ItemGroup>
 

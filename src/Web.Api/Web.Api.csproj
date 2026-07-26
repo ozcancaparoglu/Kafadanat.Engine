@@ -14,8 +14,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Onspay.Infrastructure.Logging" Version="1.0.22" />
-        <PackageReference Include="Onspay.Infrastructure.Logging.Elasticsearch" Version="1.0.22" />
+        <PackageReference Include="Onspay.Infrastructure.Logging" Version="1.0.23" />
+        <PackageReference Include="Onspay.Infrastructure.Logging.Elasticsearch" Version="1.0.23" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     </ItemGroup>
