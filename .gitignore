@@ -1,7 +1,12 @@
 bin/
 obj/
+local-nuget/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
 .idea
+.claude
 CLAUDE.md
+Kafadanat.Criteria.sln.DotSettings.user
+publish/
+*.sln.DotSettings.user
