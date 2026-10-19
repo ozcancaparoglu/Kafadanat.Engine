@@ -7,7 +7,10 @@ using Web.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseOnspayLogging((cfg, ctx) => cfg.WriteToElasticsearch(ctx));
+// Console as well as Elasticsearch, so `kubectl logs` shows errors without a port-forward to ES.
+builder.Host.UseOnspayLogging((cfg, ctx) => cfg
+    .WriteToElasticsearch(ctx)
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}"));
 
 builder.Services
     .AddApplication()
