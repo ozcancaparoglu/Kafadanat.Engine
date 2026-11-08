@@ -9,6 +9,9 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+    - name: jnlp
+      resources:
+        requests: { cpu: "100m", memory: "128Mi" }
     - name: kaniko
       image: gcr.io/kaniko-project/executor:debug
       command: ["sleep"]
